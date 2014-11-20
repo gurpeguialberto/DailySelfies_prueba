@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.prueba2.MainActivity" >
+
+    <item
+        android:id="@+id/action_camera"
+        android:icon="@drawable/ic_action_camera"
+        android:showAsAction="ifRoom"
+        android:title="@string/camera"/>
+
+</menu>
