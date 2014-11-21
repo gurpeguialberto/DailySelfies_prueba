@@ -1,6 +1,7 @@
 package com.example.prueba2;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -74,6 +75,10 @@ public class MainActivity extends Activity {
                // ListView Clicked item value
                String  itemValue    = (String) listView.getItemAtPosition(position);
                   
+               
+               setPic();
+               
+               
                 // Show Alert 
                 Toast.makeText(getApplicationContext(),
                   "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
@@ -83,6 +88,7 @@ public class MainActivity extends Activity {
         });
     }
 	void ShowSavedFiles(){
+		Log.i(TAG, "Entered ....ShowSavedFiles()...");
 		   SavedFiles = getApplicationContext().fileList();
 		   ArrayAdapter<String> adapter
 		   = new ArrayAdapter<String>(this,
@@ -91,33 +97,22 @@ public class MainActivity extends Activity {
 
 		   listView.setAdapter(adapter);
 		  }
-	public File getAlbumStorageDir(String albumName) {
-	    // Get the directory for the user's public pictures directory. 
-	    File file = new File(Environment.getExternalStoragePublicDirectory(
-	            Environment.DIRECTORY_PICTURES), albumName);
-	    if (!file.mkdirs()) {
-	       // Log.e(LOG_TAG, "Directory not created");
-	    }
-	    return file;
-	}
-	public File getAlbumStorageDir(Context context, String albumName) {
-	    // Get the directory for the app's private pictures directory. 
-	    File file = new File(context.getExternalFilesDir(
-	            Environment.DIRECTORY_PICTURES), albumName);
-	    if (!file.mkdirs()) {
-	        //Log.e(LOG_TAG, "Directory not created");
-	    }
-	    return file;
-	}
+	
+
+	
 	private File createImageFile() throws IOException {
+		Log.i(TAG, "Entered ....createImageFile....");
+		
 	    // Create an image file name
 	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-	    String imageFileName = "JPEG_" + timeStamp + "_";
+	    String imageFileName = "PNG_" + timeStamp + "_";
 	    File storageDir = Environment.getExternalStoragePublicDirectory(
 	            Environment.DIRECTORY_PICTURES);
+	    
+
 	    File image = File.createTempFile(
 	        imageFileName,  /* prefix */
-	        ".jpg",         /* suffix */
+	        ".png",         /* suffix */
 	        storageDir      /* directory */
 	    );
 
@@ -127,6 +122,8 @@ public class MainActivity extends Activity {
 	}
 	
 	private void setPic() {
+		Log.i(TAG, "Entered ....setPic()....");
+		
 	    // Get the dimensions of the View
 	    int targetW = listView.getWidth();
 	    int targetH = listView.getHeight();
@@ -154,14 +151,22 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i(TAG, "Entered ....onActivityResult()....");
+			  			 //REQUEST_TAKE_PHOTO
 	    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 	        Bundle extras = data.getExtras();
 	        Bitmap imageBitmap = (Bitmap) extras.get("data");
+	       /* Thumbnail of photo */
+	        /* do something with it */
+	        ShowSavedFiles();
+	        /*
 	        ImageView mImageView = null;
 			mImageView.setImageBitmap(imageBitmap);
 			listView.addView(mImageView);
+			*/
 	    }
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,26 +182,23 @@ public class MainActivity extends Activity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_camera) {
-			  Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-			    	 // Ensure that there's a camera activity to handle the intent
-			        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-			            // Create the File where the photo should go
-			            File photoFile = null;
-			            try {
-			                photoFile = createImageFile();
-			            } catch (IOException ex) {
-			                // Error occurred while creating the File
-			                
-			            }
-			            // Continue only if the File was successfully created
-			            if (photoFile != null) {
-			                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-			                        Uri.fromFile(photoFile));
-			                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-			            }
-			        }
-			    }
+			 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+		            // Create the File where the photo should go
+		            File photoFile = null;
+		            try {
+		                photoFile = createImageFile();
+		            } catch (IOException ex) {
+		                // Error occurred while creating the File
+		                
+		            }
+		            // Continue only if the File was successfully created
+		            if (photoFile != null) {
+		                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+		                        Uri.fromFile(photoFile));
+		                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+		            }
+		        }
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
