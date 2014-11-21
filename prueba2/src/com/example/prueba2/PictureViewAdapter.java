@@ -1,8 +1,10 @@
 package com.example.prueba2;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.os.Environment;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -16,6 +18,13 @@ public class PictureViewAdapter extends BaseAdapter{
 	private ArrayList<PictureRecord> list = new ArrayList<PictureRecord>();
 	private static LayoutInflater inflater = null;
 	private Context mContext;
+	
+	public PictureViewAdapter(ArrayList<PictureRecord> list, Context mContext) {
+		super();
+		this.list = list;
+		this.mContext = mContext;
+	}
+
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
