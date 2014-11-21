@@ -7,8 +7,10 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -89,6 +91,24 @@ public class MainActivity extends Activity {
 
 		   listView.setAdapter(adapter);
 		  }
+	public File getAlbumStorageDir(String albumName) {
+	    // Get the directory for the user's public pictures directory. 
+	    File file = new File(Environment.getExternalStoragePublicDirectory(
+	            Environment.DIRECTORY_PICTURES), albumName);
+	    if (!file.mkdirs()) {
+	       // Log.e(LOG_TAG, "Directory not created");
+	    }
+	    return file;
+	}
+	public File getAlbumStorageDir(Context context, String albumName) {
+	    // Get the directory for the app's private pictures directory. 
+	    File file = new File(context.getExternalFilesDir(
+	            Environment.DIRECTORY_PICTURES), albumName);
+	    if (!file.mkdirs()) {
+	        //Log.e(LOG_TAG, "Directory not created");
+	    }
+	    return file;
+	}
 	private File createImageFile() throws IOException {
 	    // Create an image file name
 	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -105,6 +125,32 @@ public class MainActivity extends Activity {
 	    mCurrentPhotoPath = "file:" + image.getAbsolutePath();
 	    return image;
 	}
+	
+	private void setPic() {
+	    // Get the dimensions of the View
+	    int targetW = listView.getWidth();
+	    int targetH = listView.getHeight();
+
+	    // Get the dimensions of the bitmap
+	    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+	    bmOptions.inJustDecodeBounds = true;
+	    BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+	    int photoW = bmOptions.outWidth;
+	    int photoH = bmOptions.outHeight;
+
+	    // Determine how much to scale down the image
+	    int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+	    // Decode the image file into a Bitmap sized to fill the View
+	    bmOptions.inJustDecodeBounds = false;
+	    bmOptions.inSampleSize = scaleFactor;
+	    bmOptions.inPurgeable = true;
+
+	    Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+	    //listView.setImageBitmap(bitmap);
+	}
+	
+	
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
