@@ -89,17 +89,25 @@ public class MainActivity extends Activity {
 	String mCurrentPhotoPath;
 
 	private File createImageFile() throws IOException {
-		Log.i(TAG, "Entered ....createImageFile....");
+		Log.i(TAG, "Entered ....createImageFile....StorageState= " + Environment.getExternalStorageState());
 	    // Create an image file name
 	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 	    String imageFileName = "JPEG_" + timeStamp + "_";
+	    
 	    File storageDir = Environment.getExternalStoragePublicDirectory(
 	            Environment.DIRECTORY_PICTURES);
-	    File image = File.createTempFile(
-	        imageFileName,  /* prefix */
-	        ".jpg",         /* suffix */
-	        storageDir      /* directory */
-	    );
+	    File image = null;
+	    try{
+
+		    image = File.createTempFile(
+		        imageFileName,  /* prefix */
+		        ".jpg",         /* suffix */
+		        storageDir      /* directory */
+		    );
+	    } catch (IOException ex){
+	    	Log.i(TAG, "Entered ....createImageFile....File= NOT CREATED");
+	    	ex.printStackTrace();
+	    }
 	    Log.i(TAG, "Entered ....createImageFile....File= " + image.toString());
 
 	    // Save a file: path for use with ACTION_VIEW intents
@@ -107,6 +115,7 @@ public class MainActivity extends Activity {
 	    return image;
 	}
 	private void dispatchTakePictureIntent() {
+		Log.i(TAG, "Entered ....dispatchTakePictureIntent....");
 	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 	    // Ensure that there's a camera activity to handle the intent
 	    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -116,7 +125,8 @@ public class MainActivity extends Activity {
 	            photoFile = createImageFile();
 	        } catch (IOException ex) {
 	            // Error occurred while creating the File
-
+	        	Log.i(TAG, "Entered ....dispatchTakePictureIntent...Error occurred while creating the File.");
+	        	ex.printStackTrace();
 	        }
 	        // Continue only if the File was successfully created
 	        if (photoFile != null) {
