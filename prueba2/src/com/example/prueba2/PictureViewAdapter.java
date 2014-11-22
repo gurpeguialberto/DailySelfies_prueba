@@ -3,6 +3,7 @@ package com.example.prueba2;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -16,6 +17,13 @@ public class PictureViewAdapter extends BaseAdapter{
 	private ArrayList<PictureRecord> list = new ArrayList<PictureRecord>();
 	private static LayoutInflater inflater = null;
 	private Context mContext;
+	
+	/*   constructor    */
+	public PictureViewAdapter(Context context){
+		mContext = context;
+		inflater = LayoutInflater.from(mContext);
+	}
+	
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
@@ -37,8 +45,6 @@ public class PictureViewAdapter extends BaseAdapter{
 		
 		ImageView picture;
 		TextView picture_name;
-		TextView picture_time;
-		
 	}
 
 	@Override
@@ -53,7 +59,6 @@ public class PictureViewAdapter extends BaseAdapter{
 			newView = inflater.inflate(R.layout.picture_item_view, null);
 			holder.picture = (ImageView) newView.findViewById(R.id.picture);
 			holder.picture_name = (TextView) newView.findViewById(R.id.picture_name);
-			holder.picture_time = (TextView) newView.findViewById(R.id.picture_time);
 			newView.setTag(holder);
 			
 		} else {
@@ -61,9 +66,19 @@ public class PictureViewAdapter extends BaseAdapter{
 		}
 		holder.picture.setImageBitmap(curr.getmPicture());
 		holder.picture_name.setText("Picture name: " + curr.getmPicName());
-		holder.picture_time.setText("Picture time: " + curr.getmDate());
 
 		return newView;
+	}
+	public void add(PictureRecord listItem){
+		list.add(listItem);
+		notifyDataSetChanged();
+	}
+	public ArrayList<PictureRecord> getList(){
+		return list;
+	}
+	public void removeAllViews(){
+		list.clear();
+		this.notifyDataSetChanged();
 	}
 
 }
