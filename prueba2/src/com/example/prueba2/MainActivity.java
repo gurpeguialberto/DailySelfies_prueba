@@ -93,9 +93,20 @@ public class MainActivity extends Activity {
 	    // Create an image file name
 	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 	    String imageFileName = "JPEG_" + timeStamp + "_";
-	    
-	    File storageDir = Environment.getExternalStoragePublicDirectory(
-	            Environment.DIRECTORY_PICTURES);
+	    File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+	    if ( !storageDir.exists()) {
+	    	Log.i(TAG, "storageDir does not exist: absPath = " + storageDir.getAbsolutePath() + "  ...toString = " + storageDir.toString());
+    		return null;
+	    	} else {
+	    		Log.i(TAG, "storageDir exists: " + storageDir.getAbsolutePath());
+	    	}
+	    if ( !storageDir.canWrite()){
+	    	Log.i(TAG, "storageDir is not writable: " + storageDir.getAbsolutePath() + "  ...toString = " + storageDir.toString());
+    		return null;
+	    	} else {
+	    		Log.i(TAG, "storageDir is writable: " + storageDir.getAbsolutePath());
+	    	}
+	   
 	    File image = null;
 	    try{
 
