@@ -23,11 +23,18 @@ public class MainActivity extends Activity {
 	private static final String TAG = "Photo";
 	static final int REQUEST_IMAGE_CAPTURE = 1;
 	static final int REQUEST_TAKE_PHOTO = 1;
+	String mCurrentPhotoPath;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		
 		Log.i(TAG, "Entered ....onCreate....");
+		
+		
+		
+		
+		/*-----------------------------------------------------*/
+		setContentView(R.layout.activity_main);
 		  // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
         
@@ -54,6 +61,10 @@ public class MainActivity extends Activity {
 
         // Assign adapter to ListView
         listView.setAdapter(adapter); 
+        /*-----------------------------------------------------*/
+        
+        
+        
         
         // ListView Item Click Listener
         listView.setOnItemClickListener(new OnItemClickListener() {
@@ -86,7 +97,7 @@ public class MainActivity extends Activity {
 			listView.addView(mImageView);
 	    }
 	}
-	String mCurrentPhotoPath;
+	
 
 	private File createImageFile() throws IOException {
 		Log.i(TAG, "Entered ....createImageFile....StorageState= " + Environment.getExternalStorageState());
@@ -95,13 +106,13 @@ public class MainActivity extends Activity {
 	    String imageFileName = "JPEG_" + timeStamp + "_";
 	    File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 	    if ( !storageDir.exists()) {
-	    	Log.i(TAG, "storageDir does not exist: absPath = " + storageDir.getAbsolutePath() + "  ...toString = " + storageDir.toString());
+	    	Log.i(TAG, "storageDir does not exist: absPath = " + storageDir.getAbsolutePath());
     		return null;
 	    	} else {
 	    		Log.i(TAG, "storageDir exists: " + storageDir.getAbsolutePath());
 	    	}
 	    if ( !storageDir.canWrite()){
-	    	Log.i(TAG, "storageDir is not writable: " + storageDir.getAbsolutePath() + "  ...toString = " + storageDir.toString());
+	    	Log.i(TAG, "storageDir is not writable: " + storageDir.getAbsolutePath());
     		return null;
 	    	} else {
 	    		Log.i(TAG, "storageDir is writable: " + storageDir.getAbsolutePath());
