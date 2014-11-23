@@ -100,9 +100,16 @@ public class MainActivity extends ListActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 	    	Log.i(TAG, "Entered ....onActivityResult....REQUEST_TAKE_PHOTO_OK...RESULT_OK..OK");
-	        Bundle extras = data.getExtras();
-	        Bitmap imageBitmap = (Bitmap) extras.get("data");
-	        
+	    	Bitmap imageBitmap = null;
+	    	try{
+
+		        Bundle extras = data.getExtras();
+		        imageBitmap = (Bitmap) extras.get("data");
+		        
+	    	} catch (Exception ex){
+	    		Log.i(TAG, "Entered ....onActivityResult....Exception " + ex.toString());
+	    	}
+	    	
 	        adapter.add(new PictureRecord(null, mCurrentPhotoPath, imageBitmap));
 	        
 	        //ImageView mImageView = null;
