@@ -134,7 +134,7 @@ public class MainActivity extends ListActivity {
 				Log.i(TAG, "Entered ....onActivityResult...Creating File = ." + mFile.toString() +
 														".....mCurrentPhotoPath = " + mCurrentPhotoPath);
 			       FileOutputStream out = new FileOutputStream(mFile);
-			       imageBitmap.compress(Bitmap.CompressFormat.JPEG, 10, out);
+			       imageBitmap.compress(Bitmap.CompressFormat.JPEG, 5, out);
 			       out.flush();
 			       out.close();
 
