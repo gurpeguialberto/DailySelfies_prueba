@@ -1,12 +1,14 @@
 package com.example.prueba2;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -18,22 +20,29 @@ import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class MainActivity extends Activity {
-	ListView listView ;
+public class MainActivity extends ListActivity {
+	
 	private static final String TAG = "Photo";
 	static final int REQUEST_IMAGE_CAPTURE = 1;
 	static final int REQUEST_TAKE_PHOTO = 1;
 	String mCurrentPhotoPath;
+	private PictureViewAdapter adapter;
+	
+	ListView listView ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		Log.i(TAG, "Entered ....onCreate....");
 		
+		adapter = new PictureViewAdapter(getApplicationContext());
+		listView = getListView();
+		LayoutInflater inflater = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		
-		
+		listView.setAdapter(adapter);
 		/*-----------------------------------------------------*/
+		/*
 		setContentView(R.layout.activity_main);
 		  // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
@@ -47,7 +56,7 @@ public class MainActivity extends Activity {
                                          "List View Source Code", 
                                          "List View Array Adapter", 
                                          "Android Example List View" 
-         };/* change to retrieve names of files=images from sdcard  */
+         };// algurpe: change to retrieve names of files=images from sdcard  
 
         // Define a new Adapter
         // First parameter - Context
@@ -61,6 +70,7 @@ public class MainActivity extends Activity {
 
         // Assign adapter to ListView
         listView.setAdapter(adapter); 
+        */
         /*-----------------------------------------------------*/
         
         
@@ -88,13 +98,53 @@ public class MainActivity extends Activity {
     }
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-	    	Log.i(TAG, "Entered ....onActivityResult....");
+	    if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+	    	Log.i(TAG, "Entered ....onActivityResult....REQUEST_TAKE_PHOTO_OK...RESULT_OK..OK");
 	        Bundle extras = data.getExtras();
 	        Bitmap imageBitmap = (Bitmap) extras.get("data");
-	        ImageView mImageView = null;
-			mImageView.setImageBitmap(imageBitmap);
-			listView.addView(mImageView);
+	        
+	        adapter.add(new PictureRecord(null, mCurrentPhotoPath, imageBitmap));
+	        
+	        //ImageView mImageView = null;
+			//mImageView.setImageBitmap(imageBitmap);
+			//listView.addView(mImageView);
+			//File mFile = (File) extras.get("MediaStore.EXTRA_OUTPUT");
+			//Uri mUri = (Uri) extras.get("MediaStore.EXTRA_OUTPUT");
+			
+			//data.getData()
+			//adapter.add(new PictureRecord(picName, picPath, bitmap));
+			
+			
+			
+			
+			
+			
+			/* retrieve ExtraData element from Intent */
+			
+			// Test    File mFile = new File(mUri);
+			File mFile = new File(mCurrentPhotoPath);
+			try {
+				Log.i(TAG, "Entered ....onActivityResult...Creating File = ." + mFile.toString() +
+														".....mCurrentPhotoPath = " + mCurrentPhotoPath);
+			       FileOutputStream out = new FileOutputStream(mFile);
+			       imageBitmap.compress(Bitmap.CompressFormat.JPEG, 10, out);
+			       out.flush();
+			       out.close();
+
+			} catch (Exception e) {
+			       e.printStackTrace();
+			       Log.i(TAG, "Entered ....onActivityResult...Creating File =  FAAAIL. mCurrentPhotoPath = " + mCurrentPhotoPath);
+			}
+			
+	    } else if (resultCode != RESULT_OK){
+	    	if (requestCode == REQUEST_TAKE_PHOTO){
+	    		 Log.i(TAG, "Entered ....onActivityResult... NOno RESULT_OK..... SIS REQUEST_TAKE_PHOTO");
+	    	}else{
+	    		Log.i(TAG, "Entered ....onActivityResult... NOno RESULT_OK..... NoNo REQUEST_TAKE_PHOTO");	
+	    	}
+	    	
+	    }else{
+	    	Log.i(TAG, "Entered ....onActivityResult... SISI RESULT_OK..... NoNo REQUEST_TAKE_PHOTO");
 	    }
 	}
 	
@@ -120,7 +170,7 @@ public class MainActivity extends Activity {
 	   
 	    File image = null;
 	    try{
-
+	    	
 		    image = File.createTempFile(
 		        imageFileName,  /* prefix */
 		        ".jpg",         /* suffix */
