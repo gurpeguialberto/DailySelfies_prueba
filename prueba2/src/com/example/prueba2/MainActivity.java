@@ -101,16 +101,19 @@ public class MainActivity extends ListActivity {
 	    if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 	    	Log.i(TAG, "Entered ....onActivityResult....REQUEST_TAKE_PHOTO_OK...RESULT_OK..OK");
 	    	Bitmap imageBitmap = null;
+	    	Bitmap imageBitmap2 = null;
 	    	try{
-
-		        Bundle extras = data.getExtras();
+	    		Bundle extras = data.getExtras();
+		       
 		        imageBitmap = (Bitmap) extras.get("data");
-		        
+		        imageBitmap2 = (Bitmap) extras.getParcelable("data");
 	    	} catch (Exception ex){
-	    		Log.i(TAG, "Entered ....onActivityResult....Exception " + ex.toString());
+	    		Log.i(TAG, "Entered ....onActivityResult....Exception... getData" + ex.toString());
 	    	}
+	    	PictureRecord mPictureRecord = new PictureRecord(mCurrentPhotoPath, mCurrentPhotoPath, imageBitmap);
+	    	mPictureRecord.setmPicture(imageBitmap2);
 	    	
-	        adapter.add(new PictureRecord(null, mCurrentPhotoPath, imageBitmap));
+	        adapter.add(mPictureRecord);
 	        
 	        //ImageView mImageView = null;
 			//mImageView.setImageBitmap(imageBitmap);
@@ -126,7 +129,7 @@ public class MainActivity extends ListActivity {
 			
 			
 			
-			/* retrieve ExtraData element from Intent */
+			/* 
 			
 			// Test    File mFile = new File(mUri);
 			File mFile = new File(mCurrentPhotoPath);
@@ -142,7 +145,7 @@ public class MainActivity extends ListActivity {
 			       e.printStackTrace();
 			       Log.i(TAG, "Entered ....onActivityResult...Creating File =  FAAAIL. mCurrentPhotoPath = " + mCurrentPhotoPath);
 			}
-			
+		 */	
 	    } else if (resultCode != RESULT_OK){
 	    	if (requestCode == REQUEST_TAKE_PHOTO){
 	    		 Log.i(TAG, "Entered ....onActivityResult... NOno RESULT_OK..... SIS REQUEST_TAKE_PHOTO");
