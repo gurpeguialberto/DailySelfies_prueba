@@ -5,8 +5,7 @@ import java.util.Date;
 import android.graphics.Bitmap;
 
 public class PictureRecord {
-	private String mPicName;
-	private String mPath;
+	private String mPicUri;
 	private Bitmap mPicture;
 	private Date mDate;
 	public Date getmDate() {
@@ -15,16 +14,23 @@ public class PictureRecord {
 	public void setmDate(Date mDate) {
 		this.mDate = mDate;
 	}
-	public PictureRecord(String mPicName, String mPath, Bitmap mPicture) {
+	public PictureRecord(String mPicUri, Bitmap mPicture) {
 		super();
-		this.mPicName = mPicName;
-		this.mPath = mPath;
+		this.mPicUri = mPicUri;
 		this.mPicture = mPicture;
 	}
-	public String getmPicName() {
-		return mPicName;
+	public String getmPicUri() {
+		return mPicUri;
 	}
-	public void setmPicName(String mPicName) {
+	
+	public Bitmap getmPicture() {
+		return mPicture;
+	}
+	public void setmPicture(Bitmap mPicture) {
+		this.mPicture = mPicture;
+	}
+	/*
+	 * public void setmPicName(String mPicName) {
 		this.mPicName = mPicName;
 	}
 	public String getmPath() {
@@ -33,13 +39,8 @@ public class PictureRecord {
 	public void setmPath(String mPath) {
 		this.mPath = mPath;
 	}
-	public Bitmap getmPicture() {
-		return mPicture;
-	}
-	public void setmPicture(Bitmap mPicture) {
-		this.mPicture = mPicture;
-	}
-	
+	*/
+	 
 	
 
 }

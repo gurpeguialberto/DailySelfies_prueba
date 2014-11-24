@@ -65,7 +65,7 @@ public class PictureViewAdapter extends BaseAdapter{
 			holder = (ViewHolder) newView.getTag();
 		}
 		holder.picture.setImageBitmap(curr.getmPicture());
-		holder.picture_name.setText("Picture name: " + curr.getmPicName());
+		holder.picture_name.setText("Picture name: " + curr.getmPicUri());
 
 		return newView;
 	}

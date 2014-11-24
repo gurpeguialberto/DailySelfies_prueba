@@ -11,6 +11,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +27,7 @@ public class MainActivity extends ListActivity {
 	static final int REQUEST_IMAGE_CAPTURE = 1;
 	static final int REQUEST_TAKE_PHOTO = 1;
 	String mCurrentPhotoPath;
+	String mCurrentPhotoLocation;
 	private PictureViewAdapter adapter;
 	
 	ListView listView ;
@@ -96,56 +98,47 @@ public class MainActivity extends ListActivity {
               }
         });
     }
+	protected void onResume(Bundle savedInstanceState){
+		//listView.getList();
+	}
+	private Bitmap setPic() {
+	    // Get the dimensions of the View
+	    int targetW = listView.getWidth();
+	    int targetH = listView.getHeight();
+
+	    // Get the dimensions of the bitmap
+	    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+	    bmOptions.inJustDecodeBounds = true;
+	    BitmapFactory.decodeFile(mCurrentPhotoLocation, bmOptions);
+	    int photoW = bmOptions.outWidth;
+	    int photoH = bmOptions.outHeight;
+
+	    // Determine how much to scale down the image
+	    int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+	    // Decode the image file into a Bitmap sized to fill the View
+	    bmOptions.inJustDecodeBounds = false;
+	    bmOptions.inSampleSize = scaleFactor;
+	    bmOptions.inPurgeable = true;
+
+	    Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoLocation, bmOptions);
+	    return bitmap;
+	    //listView.addView(adapter.getView(position, convertView, parent));
+	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 	    	Log.i(TAG, "Entered ....onActivityResult....REQUEST_TAKE_PHOTO_OK...RESULT_OK..OK");
-	    	Bitmap imageBitmap = null;
-	    	Bitmap imageBitmap2 = null;
-	    	try{
-	    		Bundle extras = data.getExtras();
-		       
-		        imageBitmap = (Bitmap) extras.get("data");
-		        imageBitmap2 = (Bitmap) extras.getParcelable("data");
-	    	} catch (Exception ex){
-	    		Log.i(TAG, "Entered ....onActivityResult....Exception... getData" + ex.toString());
-	    	}
-	    	PictureRecord mPictureRecord = new PictureRecord(mCurrentPhotoPath, mCurrentPhotoPath, imageBitmap);
-	    	mPictureRecord.setmPicture(imageBitmap2);
+	    	
+	    	// adding URI file makes returned intent be NULL
+	    	
+	    	PictureRecord mPictureRecord = new PictureRecord(mCurrentPhotoPath, setPic());
+	    	
 	    	
 	        adapter.add(mPictureRecord);
-	        
-	        //ImageView mImageView = null;
-			//mImageView.setImageBitmap(imageBitmap);
-			//listView.addView(mImageView);
-			//File mFile = (File) extras.get("MediaStore.EXTRA_OUTPUT");
-			//Uri mUri = (Uri) extras.get("MediaStore.EXTRA_OUTPUT");
+	        galleryAddPic();
+	       
 			
-			//data.getData()
-			//adapter.add(new PictureRecord(picName, picPath, bitmap));
-			
-			
-			
-			
-			
-			
-			/* 
-			
-			// Test    File mFile = new File(mUri);
-			File mFile = new File(mCurrentPhotoPath);
-			try {
-				Log.i(TAG, "Entered ....onActivityResult...Creating File = ." + mFile.toString() +
-														".....mCurrentPhotoPath = " + mCurrentPhotoPath);
-			       FileOutputStream out = new FileOutputStream(mFile);
-			       imageBitmap.compress(Bitmap.CompressFormat.JPEG, 5, out);
-			       out.flush();
-			       out.close();
-
-			} catch (Exception e) {
-			       e.printStackTrace();
-			       Log.i(TAG, "Entered ....onActivityResult...Creating File =  FAAAIL. mCurrentPhotoPath = " + mCurrentPhotoPath);
-			}
-		 */	
 	    } else if (resultCode != RESULT_OK){
 	    	if (requestCode == REQUEST_TAKE_PHOTO){
 	    		 Log.i(TAG, "Entered ....onActivityResult... NOno RESULT_OK..... SIS REQUEST_TAKE_PHOTO");
@@ -156,6 +149,13 @@ public class MainActivity extends ListActivity {
 	    }else{
 	    	Log.i(TAG, "Entered ....onActivityResult... SISI RESULT_OK..... NoNo REQUEST_TAKE_PHOTO");
 	    }
+	}
+	private void galleryAddPic() {
+	    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+	    File f = new File(mCurrentPhotoPath);
+	    Uri contentUri = Uri.fromFile(f);
+	    mediaScanIntent.setData(contentUri);
+	    this.sendBroadcast(mediaScanIntent);
 	}
 	
 
@@ -193,6 +193,7 @@ public class MainActivity extends ListActivity {
 	    Log.i(TAG, "Entered ....createImageFile....File= " + image.toString());
 
 	    // Save a file: path for use with ACTION_VIEW intents
+	    mCurrentPhotoLocation = image.getAbsolutePath();
 	    mCurrentPhotoPath = "file:" + image.getAbsolutePath();
 	    return image;
 	}
