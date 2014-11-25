@@ -27,6 +27,15 @@
             
             
         </activity>
+         <activity
+            android:name=".DetailActivity"
+            android:label="@string/detail_activity" 
+            >
+           
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.example.prueba2.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>

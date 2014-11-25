@@ -4,5 +4,7 @@
     <string name="app_name">prueba2</string>
     <string name="hello_world">Hello world!</string>
     <string name="camera">Camera</string>
+    <string name="detail_activity">Display Image</string>
+    
 
 </resources>
