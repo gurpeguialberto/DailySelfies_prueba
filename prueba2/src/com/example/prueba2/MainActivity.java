@@ -88,12 +88,9 @@ public class MainActivity extends ListActivity {
                int itemPosition     = position;
                
                // ListView Clicked item value
-               String  itemValue    = (String) listView.getItemAtPosition(position);
-                  
-                // Show Alert 
-                Toast.makeText(getApplicationContext(),
-                  "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
-                  .show();
+               //String  itemValue    = (String) listView.getItemAtPosition(position);
+                 PictureRecord mPicRecord = (PictureRecord) adapter.getItem(position); 
+                
              /* Add code to start new Activity to show the selected picture */
               }
         });
@@ -122,8 +119,9 @@ public class MainActivity extends ListActivity {
 	    bmOptions.inPurgeable = true;
 
 	    Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoLocation, bmOptions);
+	    Log.i(TAG, "Entered ....setPic....mCurrentPhotoLocation = " + mCurrentPhotoLocation);
+	    Log.i(TAG, "Entered ....setPic....mCurrentPhotoPath = " + mCurrentPhotoPath);
 	    return bitmap;
-	    //listView.addView(adapter.getView(position, convertView, parent));
 	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -141,7 +139,7 @@ public class MainActivity extends ListActivity {
 			
 	    } else if (resultCode != RESULT_OK){
 	    	if (requestCode == REQUEST_TAKE_PHOTO){
-	    		 Log.i(TAG, "Entered ....onActivityResult... NOno RESULT_OK..... SIS REQUEST_TAKE_PHOTO");
+	    		 Log.i(TAG, "Entered ....onActivityResult... NOno RESULT_OK..... SI REQUEST_TAKE_PHOTO");
 	    	}else{
 	    		Log.i(TAG, "Entered ....onActivityResult... NOno RESULT_OK..... NoNo REQUEST_TAKE_PHOTO");	
 	    	}

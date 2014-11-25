@@ -1,19 +1,13 @@
 package com.example.prueba2;
 
-import java.util.Date;
+
 
 import android.graphics.Bitmap;
 
 public class PictureRecord {
 	private String mPicUri;
 	private Bitmap mPicture;
-	private Date mDate;
-	public Date getmDate() {
-		return mDate;
-	}
-	public void setmDate(Date mDate) {
-		this.mDate = mDate;
-	}
+	
 	public PictureRecord(String mPicUri, Bitmap mPicture) {
 		super();
 		this.mPicUri = mPicUri;
@@ -22,7 +16,9 @@ public class PictureRecord {
 	public String getmPicUri() {
 		return mPicUri;
 	}
-	
+	public void setmPicUri(String mPicUri) {
+		this.mPicUri = mPicUri;
+	}
 	public Bitmap getmPicture() {
 		return mPicture;
 	}
@@ -36,9 +32,7 @@ public class PictureRecord {
 	public String getmPath() {
 		return mPath;
 	}
-	public void setmPath(String mPath) {
-		this.mPath = mPath;
-	}
+	
 	*/
 	 
 	
