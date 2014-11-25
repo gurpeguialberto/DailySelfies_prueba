@@ -89,7 +89,8 @@ public class MainActivity extends ListActivity {
                // ListView Clicked item value
                //String  itemValue    = (String) listView.getItemAtPosition(position);
                  PictureRecord mPicRecord = (PictureRecord) adapter.getItem(position); 
-                 mIntent.putExtra("myImage", mPicRecord.getmPicture());
+                 
+                 mIntent.putExtra("myImageUri", mPicRecord.getmPicUri());
                  startActivity(mIntent);
              /* Add code to start new Activity to show the selected picture */
               }
