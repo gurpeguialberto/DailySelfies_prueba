@@ -1,6 +1,8 @@
 package com.example.prueba2;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 public class DetailActivity extends Activity{
+
 	private Bitmap mBitmap; 
 	private ImageView mView;
 	//private Intent mIntent;
@@ -24,6 +27,7 @@ public class DetailActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail);
 		mView = (ImageView) findViewById(R.id.detail_image);
+		
 		mView.setAdjustViewBounds(true);
 		
 		Log.i(TAG, "Entered ....onCreate...DetailActivity.");

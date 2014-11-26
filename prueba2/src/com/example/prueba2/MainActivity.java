@@ -1,21 +1,21 @@
 package com.example.prueba2;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.ListActivity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.*;
@@ -23,6 +23,10 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends ListActivity {
+	private AlarmManager mAlarmManager;
+	private Intent mNotificationReceiverIntent;
+	private PendingIntent mNotificationReceiverPendingIntent;
+	private static final long INITIAL_ALARM_DELAY = 2 * 60 * 1000L; //2 minutes
 	
 	private static final String TAG = "Photo";
 	static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -31,8 +35,7 @@ public class MainActivity extends ListActivity {
 	String mCurrentPhotoLocation;
 	private PictureViewAdapter adapter;
 	
-	 private Cursor cursor;
-	    private int columnIndex;
+	
 	
 	ListView listView ;
 	@Override
@@ -48,7 +51,21 @@ public class MainActivity extends ListActivity {
 		
 		listView.setAdapter(adapter);
 		/*-----------------------------------------------------*/
-		
+		// Get the AlarmManager Service
+		mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+		// Create an Intent to broadcast to the AlarmNotificationReceiver
+		mNotificationReceiverIntent = new Intent(MainActivity.this,
+				AlarmNotificationReceiver.class);
+
+		// Create an PendingIntent that holds the NotificationReceiverIntent
+		mNotificationReceiverPendingIntent = PendingIntent.getBroadcast(
+				MainActivity.this, 0, mNotificationReceiverIntent, 0);
+		// Set repeating alarm
+		mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME,
+				SystemClock.elapsedRealtime() + INITIAL_ALARM_DELAY,
+				INITIAL_ALARM_DELAY,
+				mNotificationReceiverPendingIntent);
         /*-----------------------------------------------------*/
         
         
