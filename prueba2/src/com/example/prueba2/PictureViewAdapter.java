@@ -45,6 +45,8 @@ public class PictureViewAdapter extends BaseAdapter{
 		
 		ImageView picture;
 		TextView picture_name;
+		TextView picture_day;
+		TextView picture_time;
 	}
 
 	@Override
@@ -59,14 +61,17 @@ public class PictureViewAdapter extends BaseAdapter{
 			newView = inflater.inflate(R.layout.picture_item_view, null);
 			holder.picture = (ImageView) newView.findViewById(R.id.picture);
 			holder.picture_name = (TextView) newView.findViewById(R.id.picture_name);
+			holder.picture_day = (TextView) newView.findViewById(R.id.picture_day);
+			holder.picture_time = (TextView) newView.findViewById(R.id.picture_time);
 			newView.setTag(holder);
 			
 		} else {
 			holder = (ViewHolder) newView.getTag();
 		}
 		holder.picture.setImageBitmap(curr.getmPicture());
-		holder.picture_name.setText("Picture name: " + curr.getmPicUri());
-
+		holder.picture_name.setText("Uri: " + curr.getmPicUri());
+		holder.picture_time.setText("Date: " + curr.getmTimeStamp());
+		holder.picture_day.setText("Time: " + curr.getmDayStamp());
 		return newView;
 	}
 	public void add(PictureRecord listItem){

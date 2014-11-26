@@ -25,16 +25,20 @@ public class PictureRecord {
 	public void setmPicture(Bitmap mPicture) {
 		this.mPicture = mPicture;
 	}
-	/*
-	 * public void setmPicName(String mPicName) {
-		this.mPicName = mPicName;
-	}
-	public String getmPath() {
-		return mPath;
-	}
 	
-	*/
-	 
-	
-
+	public String getmDayStamp() {
+		int first = mPicUri.indexOf('_')+1;
+		int last = mPicUri.indexOf("_", first);
+		String dayStamp = mPicUri.substring(first, last);
+		
+		return dayStamp;		
+	}
+	public String getmTimeStamp() {
+		int first = mPicUri.indexOf('_')+1;
+		int second = mPicUri.indexOf("_", first)+1;
+		int third = mPicUri.indexOf("_", second);
+		String timeStamp = mPicUri.substring(second, third);
+		
+		return timeStamp;
+	}
 }

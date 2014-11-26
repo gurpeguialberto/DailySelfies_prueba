@@ -19,7 +19,7 @@ public class AlarmNotificationReceiver extends BroadcastReceiver{
 
 	// Notification Text Elements
 	private final CharSequence tickerText = "Are you ready?";
-	private final CharSequence contentTitle = "Reminder";
+	private final CharSequence contentTitle = "Selfie Reminder";
 	private final CharSequence contentText = "Take your daily selfie!";
 
 	// Notification Action Elements
