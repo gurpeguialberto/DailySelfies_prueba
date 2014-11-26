@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -30,12 +31,15 @@ public class MainActivity extends ListActivity {
 	String mCurrentPhotoLocation;
 	private PictureViewAdapter adapter;
 	
+	 private Cursor cursor;
+	    private int columnIndex;
+	
 	ListView listView ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Log.i(TAG, "Entered ....onCreate....");
+		Log.i(TAG, "Entered ....onCreate....mCurrentPhotoPath" + mCurrentPhotoPath);
 		
 		adapter = new PictureViewAdapter(getApplicationContext());
 		listView = getListView();
@@ -44,35 +48,7 @@ public class MainActivity extends ListActivity {
 		
 		listView.setAdapter(adapter);
 		/*-----------------------------------------------------*/
-		/*
-		setContentView(R.layout.activity_main);
-		  // Get ListView object from xml
-        listView = (ListView) findViewById(R.id.list);
-        
-        // Defined Array values to show in ListView
-        String[] values = new String[] { "Android List View", 
-                                         "Adapter implementation",
-                                         "Simple List View In Android",
-                                         "Create List View Android", 
-                                         "Android Example", 
-                                         "List View Source Code", 
-                                         "List View Array Adapter", 
-                                         "Android Example List View" 
-         };// algurpe: change to retrieve names of files=images from sdcard  
-
-        // Define a new Adapter
-        // First parameter - Context
-        // Second parameter - Layout for the row
-        // Third parameter - ID of the TextView to which the data is written
-        // Forth - the Array of data
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-          android.R.layout.simple_list_item_1, android.R.id.text1, values);
-
-
-        // Assign adapter to ListView
-        listView.setAdapter(adapter); 
-        */
+		
         /*-----------------------------------------------------*/
         
         
@@ -83,7 +59,7 @@ public class MainActivity extends ListActivity {
         	 @Override
               public void onItemClick(AdapterView<?> parent, View view,
                  int position, long id) {
-        		 Log.i(TAG, "Entered ....onItemClick....position=" + position);
+        		 Log.i(TAG, "Entered ....onItemClick....position=" + position + " mCurrentPhotoPath= "+ mCurrentPhotoPath);
               Intent mIntent = new Intent(MainActivity.this, DetailActivity.class);
                
                // ListView Clicked item value
@@ -95,9 +71,42 @@ public class MainActivity extends ListActivity {
              /* Add code to start new Activity to show the selected picture */
               }
         });
+        String ExternalStorageDirectoryPath = 
+				Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+				.getAbsolutePath();
+
+		File targetDirector = new File(ExternalStorageDirectoryPath);
+		mCurrentPhotoPath = null;
+		mCurrentPhotoLocation = null;
+		File[] files = targetDirector.listFiles();
+		for (File file : files) {
+			mCurrentPhotoPath = "file:" + ExternalStorageDirectoryPath + "/" + file.getName().toString();
+			mCurrentPhotoLocation = ExternalStorageDirectoryPath +  "/" +file.getName().toString();
+			Log.i(TAG, "Entered ....onResume....mCurrentPhotoPath="	+ mCurrentPhotoPath);
+			Log.i(TAG, "Entered ....onResume....mCurrentPhotoLocation="	+ mCurrentPhotoLocation);
+			
+			 if(!mCurrentPhotoPath.endsWith("LOST")){
+				Log.i(TAG, "Entered ....onResume....adding existing picture...");
+				PictureRecord mPictureRecord = new PictureRecord(mCurrentPhotoPath, 
+											BitmapFactory.decodeFile(mCurrentPhotoLocation));
+				adapter.add(mPictureRecord);
+			}
+			 
+			 
+			
+		}
+		mCurrentPhotoPath = null;
+		mCurrentPhotoLocation = null;
     }
-	protected void onResume(Bundle savedInstanceState){
-		//listView.getList();
+	@Override
+	protected void onResume(){
+		super.onResume();
+		// listView.getList();
+		Log.i(TAG, "Entered ....onResume....");
+		//adapter.removeAllViews();
+		
+		
+		
 	}
 	private Bitmap setPic() {
 	    // Get the dimensions of the View
@@ -112,8 +121,11 @@ public class MainActivity extends ListActivity {
 	    int photoH = bmOptions.outHeight;
 
 	    // Determine how much to scale down the image
+	    
 	    int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
+	    Log.i(TAG, "Entered ....setPic....scaleFactor = " + scaleFactor);
+	    Log.i(TAG, "Entered ....setPic....targetW = " + targetW);
+	    Log.i(TAG, "Entered ....setPic....targetH = " + targetH);
 	    // Decode the image file into a Bitmap sized to fill the View
 	    bmOptions.inJustDecodeBounds = false;
 	    bmOptions.inSampleSize = scaleFactor;
@@ -128,15 +140,10 @@ public class MainActivity extends ListActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 	    	Log.i(TAG, "Entered ....onActivityResult....REQUEST_TAKE_PHOTO_OK...RESULT_OK..OK");
-	    	
 	    	// adding URI file makes returned intent be NULL
-	    	
 	    	PictureRecord mPictureRecord = new PictureRecord(mCurrentPhotoPath, setPic());
-	    	
-	    	
 	        adapter.add(mPictureRecord);
-	        galleryAddPic();
-	       
+	        //galleryAddPic();
 			
 	    } else if (resultCode != RESULT_OK){
 	    	if (requestCode == REQUEST_TAKE_PHOTO){
@@ -149,13 +156,15 @@ public class MainActivity extends ListActivity {
 	    	Log.i(TAG, "Entered ....onActivityResult... SISI RESULT_OK..... NoNo REQUEST_TAKE_PHOTO");
 	    }
 	}
+	/*
 	private void galleryAddPic() {
+		Log.i(TAG, "Entered ....galleryAddPic....");
 	    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 	    File f = new File(mCurrentPhotoPath);
 	    Uri contentUri = Uri.fromFile(f);
 	    mediaScanIntent.setData(contentUri);
 	    this.sendBroadcast(mediaScanIntent);
-	}
+	}*/
 	
 
 	private File createImageFile() throws IOException {
